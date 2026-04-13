@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MLBB Team Finder</title>
+
+<style>
+body{
+    background:#111827;
+    color:white;
+    font-family:Arial,sans-serif;
+    padding:20px;
+    text-align:center;
+}
+
+.box{
+    max-width:350px;
+    margin:auto;
+    background:#1f2937;
+    border-radius:20px;
+    padding:20px;
+}
+
+input,select{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:none;
+    border-radius:10px;
+    background:#374151;
+    color:white;
+    box-sizing:border-box;
+}
+
+button{
+    width:100%;
+    margin-top:15px;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    background:#f59e0b;
+    color:black;
+    font-weight:bold;
+}
+
+#status{
+    margin-top:15px;
+    color:#34d399;
+}
+</style>
+</head>
+<body>
+
+<div class="box">
+    <h2>🔥 MLBB Team Finder</h2>
+
+    <input id="nickname" placeholder="Nickname">
+
+    <select id="rank">
+        <option>Epic</option>
+        <option>Legend</option>
+        <option>Mythic</option>
+    </select>
+
+    <select id="role">
+        <option>Gold Lane</option>
+        <option>EXP Lane</option>
+        <option>Mid Lane</option>
+        <option>Roamer</option>
+        <option>Jungle</option>
+    </select>
+
+    <button onclick="saveData()">Save</button>
+
+    <p id="status"></p>
+</div>
+
+<script>
+function saveData(){
+    const nickname = document.getElementById("nickname").value;
+    const rank = document.getElementById("rank").value;
+    const role = document.getElementById("role").value;
+
+    document.getElementById("status").innerHTML =
+        "Saved:<br>" +
+        nickname + "<br>" +
+        rank + "<br>" +
+        role;
+}
+</script>
+
+</body>
+</html>
