@@ -1,69 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html lang="uz">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MLBB Team Finder</title>
-
-<style>
-body {
-    background:#111827;
-    color:white;
-    font-family:Arial,sans-serif;
-    padding:20px;
-    text-align:center;
-}
-
-.box {
-    max-width:350px;
-    margin:auto;
-    background:#1f2937;
-    border-radius:20px;
-    padding:20px;
-}
-
-input, select {
-    width:100%;
-    padding:12px;
-    margin-top:10px;
-    border:none;
-    border-radius:10px;
-    background:#374151;
-    color:white;
-    box-sizing:border-box;
-}
-
-button {
-    width:100%;
-    margin-top:15px;
-    padding:12px;
-    border:none;
-    border-radius:10px;
-    background:#f59e0b;
-    color:black;
-    font-weight:bold;
-    cursor: pointer;
-}
-
-#status {
-    margin-top:15px;
-    color:#34d399;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MLBB Team Finder</title>
+    <style>
+        body { background:#111827; color:white; font-family:Arial,sans-serif; padding:20px; text-align:center; }
+        .box { max-width:350px; margin:auto; background:#1f2937; border-radius:20px; padding:20px; }
+        input, select { width:100%; padding:12px; margin-top:10px; border:none; border-radius:10px; background:#374151; color:white; box-sizing:border-box; }
+        button { width:100%; margin-top:15px; padding:12px; border:none; border-radius:10px; background:#f59e0b; color:black; font-weight:bold; cursor:pointer; }
+        #status { margin-top:15px; color:#34d399; }
+    </style>
 </head>
 <body>
 
 <div class="box">
     <h2>🔥 MLBB Team Finder</h2>
-
     <input id="nickname" placeholder="Nickname">
-
     <select id="rank">
         <option>Epic</option>
         <option>Legend</option>
         <option>Mythic</option>
     </select>
-
     <select id="role">
         <option>Gold Lane</option>
         <option>EXP Lane</option>
@@ -71,45 +29,50 @@ button {
         <option>Roamer</option>
         <option>Jungle</option>
     </select>
-
-    <button onclick="saveData()">Save</button>
-
+    <button id="saveBtn">Save</button>
     <p id="status"></p>
 </div>
 
 <!-- Supabase SDK -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://jsdelivr.net"></script>
 
 <script>
-// O'zgaruvchi nomini 'supabaseClient' deb o'zgartirdik, to'qnashuv bo'lmasligi uchun
-const supabaseClient = window.supabase.createClient(
-  "https://mwndfdcsunctrgyaaguh.supabase.co",
-  "sb_publishable_wNIGrNUoRcUfetWpED-GXg_01XqBtAX"
-);
+    // 1. O'zgaruvchi nomini mutlaqo boshqa qildik
+    const myClient = window.supabase.createClient(
+        "https://supabase.co",
+        "sb_publishable_wNIGrNUoRcUfetWpED-GXg_01XqBtAX"
+    );
 
-async function saveData() {
-  const nickname = document.getElementById("nickname").value;
-  const rank = document.getElementById("rank").value;
-  const role = document.getElementById("role").value;
+    // 2. Funksiyani onclick bilan emas, listener bilan ulaymiz (bu xatolarni kamaytiradi)
+    document.getElementById('saveBtn').addEventListener('click', async () => {
+        const nickname = document.getElementById("nickname").value;
+        const rank = document.getElementById("rank").value;
+        const role = document.getElementById("role").value;
+        const statusEl = document.getElementById("status");
 
-  if (!nickname) {
-    document.getElementById("status").innerText = "Nickname kiriting!";
-    return;
-  }
+        if (!nickname) {
+            statusEl.innerText = "Iltimos, Nickname kiriting!";
+            return;
+        }
 
-  // Bu yerda ham 'supabaseClient' ishlatilishi shart
-  const { error } = await supabaseClient
-    .from("players")
-    .insert([{ nickname, rank, role }]);
+        statusEl.innerText = "Yuborilmoqda...";
 
-  if (error) {
-    console.error(error);
-    document.getElementById("status").innerText = "Xato: " + error.message;
-  } else {
-    document.getElementById("status").innerText = "Muvaffaqiyatli saqlandi! ✅";
-    document.getElementById("nickname").value = ""; // Inputni tozalash
-  }
-}
+        try {
+            const { error } = await myClient
+                .from("players")
+                .insert([{ nickname, rank, role }]);
+
+            if (error) {
+                statusEl.innerText = "Xato: " + error.message;
+            } else {
+                statusEl.innerText = "Muvaffaqiyatli saqlandi! ✅";
+                document.getElementById("nickname").value = "";
+            }
+        } catch (err) {
+            statusEl.innerText = "Ulanishda xatolik!";
+            console.error(err);
+        }
+    });
 </script>
 
 </body>
